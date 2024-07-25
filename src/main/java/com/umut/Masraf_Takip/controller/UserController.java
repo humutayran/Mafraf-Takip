@@ -1,5 +1,6 @@
 package com.umut.Masraf_Takip.controller;
 
+import com.umut.Masraf_Takip.dto.request.UserRequestDto;
 import com.umut.Masraf_Takip.dto.response.UserResponseDto;
 import com.umut.Masraf_Takip.service.abstraction.UserService;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +26,16 @@ public class UserController  {
         return ResponseEntity.ok(users);
     }
 
-
     @PostMapping
     public ResponseEntity<UserResponseDto> addUser(@RequestBody UserRequestDto userRequestDto) {
         UserResponseDto user = userService.addUser(userRequestDto);
         return new ResponseEntity<>(user, CREATED);
+    }
+
+
+    @GetMapping
+    public ResponseEntity<UserResponseDto> getUserByUsername(@RequestParam String username) {
+        UserResponseDto user = userService.getUserByUsername(username);
+        return ResponseEntity.ok(user);
     }
 }

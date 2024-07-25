@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/user")
@@ -43,5 +44,11 @@ public class UserController  {
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
         return ResponseEntity.ok("User deleted successfully.");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
+        UserResponseDto user = userService.getUserById(id);
+        return new ResponseEntity<>(user, OK);
     }
 }

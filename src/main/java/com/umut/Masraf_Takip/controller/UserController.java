@@ -4,6 +4,7 @@ import com.umut.Masraf_Takip.dto.request.UserRequestDto;
 import com.umut.Masraf_Takip.dto.response.UserResponseDto;
 import com.umut.Masraf_Takip.repository.UserRepository;
 import com.umut.Masraf_Takip.service.abstraction.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class UserController  {
     }
 
     @PostMapping("/addUser")
-    public ResponseEntity<UserResponseDto> addUser(@RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<UserResponseDto> addUser(@RequestBody @Valid UserRequestDto userRequestDto) {
         UserResponseDto user = userService.addUser(userRequestDto);
         return new ResponseEntity<>(user, CREATED);
     }
@@ -53,10 +54,10 @@ public class UserController  {
         return new ResponseEntity<>(user, OK);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/update/{id}")
     public ResponseEntity<UserResponseDto> updateUser(
             @PathVariable Long id,
-            @RequestBody UserRequestDto userRequestDto
+            @RequestBody @Valid UserRequestDto userRequestDto
     ) {
         UserResponseDto user = userService.updateUserById(id, userRequestDto);
         return new ResponseEntity<>(user, OK);

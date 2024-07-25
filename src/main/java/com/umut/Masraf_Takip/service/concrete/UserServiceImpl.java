@@ -6,19 +6,24 @@ import com.umut.Masraf_Takip.exception.NotFoundException;
 import com.umut.Masraf_Takip.mapper.UserMapper;
 import com.umut.Masraf_Takip.model.Role;
 import com.umut.Masraf_Takip.model.User;
+import com.umut.Masraf_Takip.repository.RoleRepository;
 import com.umut.Masraf_Takip.repository.UserRepository;
 import com.umut.Masraf_Takip.service.abstraction.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
     UserRepository userRepository;
+    RoleRepository roleRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -35,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     protected User findUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException(User.class));
     }
 
     @Override
@@ -63,12 +68,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto updateUserById(Long id, UserRequestDto userRequestDto) {
-        User userFromDb = userRepository.findById(id).orElseThrow(() -> new NotFoundException(User.class));
+        User userFromDb = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(User.class));
+
         userFromDb.setEmail(userRequestDto.getEmail());
         userFromDb.setPassword(userRequestDto.getPassword());
         userFromDb.setName(userRequestDto.getName());
         userFromDb.setUsername(userRequestDto.getUsername());
-        userRequestDto.getRoles().stream().map(x->userFromDb.getRoles().add(x));
+
+        Set<Role> updatedRoles = new HashSet<>();
+        for (Role role : userRequestDto.getRoles()) {
+            Role roleFromDb = roleRepository.findByName(role.getName())
+                    .orElseThrow(() -> new NotFoundException(Role.class));
+            updatedRoles.add(roleFromDb);
+        }
+
+        userFromDb.setRoles(updatedRoles);
+
         userRepository.save(userFromDb);
         return UserMapper.INSTANCE.entityToResponseDto(userFromDb);
     }

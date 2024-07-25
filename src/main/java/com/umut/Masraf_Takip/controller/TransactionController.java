@@ -3,6 +3,7 @@ package com.umut.Masraf_Takip.controller;
 import com.umut.Masraf_Takip.dto.request.TransactionRequestDto;
 import com.umut.Masraf_Takip.dto.response.TransactionResponseDto;
 import com.umut.Masraf_Takip.service.abstraction.TransactionService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class TransactionController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<TransactionResponseDto> addTransaction(@RequestBody TransactionRequestDto transactionRequestDto) {
+    public ResponseEntity<TransactionResponseDto> addTransaction(@RequestBody @Valid TransactionRequestDto transactionRequestDto) {
         TransactionResponseDto transaction = transactionService.addTransaction(transactionRequestDto);
         return new ResponseEntity<>(transaction, CREATED);
     }
@@ -54,7 +55,7 @@ public class TransactionController {
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateTransaction(
             @PathVariable Long id,
-            @RequestBody TransactionRequestDto transactionRequestDto
+            @Valid @RequestBody TransactionRequestDto transactionRequestDto
     ) {
         String message = transactionService.updateTransaction(id, transactionRequestDto);
         return new ResponseEntity<>(message, OK);

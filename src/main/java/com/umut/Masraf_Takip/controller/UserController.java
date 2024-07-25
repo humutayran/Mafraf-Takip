@@ -27,14 +27,14 @@ public class UserController  {
         return ResponseEntity.ok(users);
     }
 
-    @PostMapping
+    @PostMapping("/addUser")
     public ResponseEntity<UserResponseDto> addUser(@RequestBody UserRequestDto userRequestDto) {
         UserResponseDto user = userService.addUser(userRequestDto);
         return new ResponseEntity<>(user, CREATED);
     }
 
 
-    @GetMapping
+    @GetMapping("/findUser")
     public ResponseEntity<UserResponseDto> getUserByUsername(@RequestParam String username) {
         UserResponseDto user = userService.getUserByUsername(username);
         return ResponseEntity.ok(user);
@@ -46,7 +46,7 @@ public class UserController  {
         return ResponseEntity.ok("User deleted successfully.");
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/findUser/{id}")
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
         UserResponseDto user = userService.getUserById(id);
         return new ResponseEntity<>(user, OK);

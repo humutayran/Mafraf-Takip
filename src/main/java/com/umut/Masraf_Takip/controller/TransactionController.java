@@ -21,7 +21,7 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<TransactionResponseDto> addTransaction(@RequestBody TransactionRequestDto transactionRequestDto) {
         TransactionResponseDto transaction = transactionService.addTransaction(transactionRequestDto);
         return new ResponseEntity<>(transaction, CREATED);
@@ -33,7 +33,7 @@ public class TransactionController {
         return new ResponseEntity<>(transaction, OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteTransactionById(@PathVariable Long id) {
         transactionService.deleteTransaction(id);
         return new ResponseEntity<>("transaction deleted successfully", OK);
@@ -45,13 +45,13 @@ public class TransactionController {
         return new ResponseEntity<>(transactions, OK);
     }
 
-    @GetMapping("/userID/{userId}")
+    @GetMapping("/totalAmount/{userId}")
     public ResponseEntity<BigDecimal> getTotalAmountByUserId(@PathVariable Long userId) {
         BigDecimal amount = transactionService.getTotalTransactionByUserId(userId);
         return new ResponseEntity<>(amount, OK);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<String> updateTransaction(
             @PathVariable Long id,
             @RequestBody TransactionRequestDto transactionRequestDto

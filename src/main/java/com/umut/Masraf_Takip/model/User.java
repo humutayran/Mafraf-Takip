@@ -33,8 +33,6 @@ public class User extends BaseEntity {
     @Column(name = "TRANSACTION")
     private Set<Transaction> transactions;
 
-/*
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
@@ -42,5 +40,4 @@ public class User extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
-*/
 }

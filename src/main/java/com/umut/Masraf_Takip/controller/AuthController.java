@@ -1,5 +1,6 @@
 package com.umut.Masraf_Takip.controller;
 
+import com.umut.Masraf_Takip.exception.NotFoundException;
 import com.umut.Masraf_Takip.model.Role;
 import com.umut.Masraf_Takip.model.User;
 import com.umut.Masraf_Takip.repository.RoleRepository;
@@ -33,7 +34,7 @@ public class AuthController {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role userRole = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("User role not found"));
+                .orElseThrow(() -> new NotFoundException(Role.class));
         user.getRoles().add(userRole);
         userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
@@ -46,7 +47,7 @@ public class AuthController {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role adminRole = roleRepository.findByName("ROLE_ADMIN")
-                .orElseThrow(() -> new RuntimeException("Admin role not found"));
+                .orElseThrow(() -> new NotFoundException(Role.class));
         user.getRoles().add(adminRole);
         userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body("Admin registered successfully");

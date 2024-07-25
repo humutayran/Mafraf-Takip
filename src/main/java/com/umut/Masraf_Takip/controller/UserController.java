@@ -2,6 +2,7 @@ package com.umut.Masraf_Takip.controller;
 
 import com.umut.Masraf_Takip.dto.request.UserRequestDto;
 import com.umut.Masraf_Takip.dto.response.UserResponseDto;
+import com.umut.Masraf_Takip.repository.UserRepository;
 import com.umut.Masraf_Takip.service.abstraction.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,15 @@ public class UserController  {
     @GetMapping("/findUser/{id}")
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
         UserResponseDto user = userService.getUserById(id);
+        return new ResponseEntity<>(user, OK);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<UserResponseDto> updateUser(
+            @PathVariable Long id,
+            @RequestBody UserRequestDto userRequestDto
+    ) {
+        UserResponseDto user = userService.updateUserById(id, userRequestDto);
         return new ResponseEntity<>(user, OK);
     }
 }

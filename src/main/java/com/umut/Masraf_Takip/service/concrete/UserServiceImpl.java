@@ -2,7 +2,9 @@ package com.umut.Masraf_Takip.service.concrete;
 
 import com.umut.Masraf_Takip.dto.request.UserRequestDto;
 import com.umut.Masraf_Takip.dto.response.UserResponseDto;
+import com.umut.Masraf_Takip.exception.NotFoundException;
 import com.umut.Masraf_Takip.mapper.UserMapper;
+import com.umut.Masraf_Takip.model.Role;
 import com.umut.Masraf_Takip.model.User;
 import com.umut.Masraf_Takip.repository.UserRepository;
 import com.umut.Masraf_Takip.service.abstraction.UserService;
@@ -56,7 +58,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(Long id) {
-        return userRepository.findById(id).orElseThrow();
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException(User.class));
+    }
+
+    @Override
+    public UserResponseDto updateUserById(Long id, UserRequestDto userRequestDto) {
+        User userFromDb = userRepository.findById(id).orElseThrow(() -> new NotFoundException(User.class));
+        userFromDb.setEmail(userRequestDto.getEmail());
+        userFromDb.setPassword(userRequestDto.getPassword());
+        userFromDb.setName(userRequestDto.getName());
+        userFromDb.setUsername(userRequestDto.getUsername());
+        userRequestDto.getRoles().stream().map(x->userFromDb.getRoles().add(x));
+        userRepository.save(userFromDb);
+        return UserMapper.INSTANCE.entityToResponseDto(userFromDb);
     }
 }
 
